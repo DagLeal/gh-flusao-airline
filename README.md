@@ -29,6 +29,7 @@ Esta documentação organiza o trabalho com os artefatos e compromissos do Scrum
 - [Definição de Pronto](#definição-de-pronto)
 - [Incremento e evidências](#incremento-e-evidências)
 - [Riscos e decisões](#riscos-e-decisões)
+- [Consultas avançadas](#consultas-avançadas)
 - [Arquitetura e tecnologias](#arquitetura-e-tecnologias)
 - [Executar e validar](#executar-e-validar)
 - [Documentação complementar](#documentação-complementar)
@@ -59,7 +60,7 @@ Os perfis abaixo representam usuários do produto, e não responsabilidades Scru
 |---|---|---|
 | Infraestrutura | Dagner Costa | Configuração dos ambientes, Docker e Render, persistência do SQLite, backup e deploy |
 | Desenvolvimento | Daniel Oliveira, Pedro Artur e Dagner Costa | Implementação do backend e frontend, regras de negócio, integração e testes |
-| Modelagens UML em geral | Dagner Costa e Daniel Oliveira | Elaboração e manutenção dos modelos e diagramas UML, incluindo classes, casos de uso, estados e sequência |
+| Modelagem UML | Dagner Costa e Daniel Oliveira | Elaboração e manutenção dos modelos e diagramas UML, incluindo classes, casos de uso, estados e sequência |
 
 ### Responsabilidades Scrum
 
@@ -116,9 +117,10 @@ A ordem abaixo é uma proposta de priorização a ser revisada pelo Product Owne
 | 10 | US10 | Trabalhar com grades e registros relacionados | Transversal | Implementado; aceite pendente |
 | 11 | US11 | Preservar dados e produzir backups | RNF02, RNF06 | Implementado e verificado tecnicamente |
 | 12 | US12 | Executar verificações reproduzíveis | RNF03–RNF07 | Testes e evidências disponíveis |
-| 13 | US13 | Acessar a aplicação em hospedagem persistente | RNF01, RNF06, RNF07 | Docker/Render configurados; publicação pendente |
-| 14 | US14 | Consultar voos em calendário visual | Alternativa UC01 | Pendente |
-| 15 | US15 | Formalizar revisão e aceite do incremento | Meta do Produto | Pendente |
+| 13 | US16 | Consultar indicadores e executar operações assistidas | Lista SQL 01–40 | Implementado e verificado tecnicamente; aceite pendente |
+| 14 | US13 | Acessar a aplicação em hospedagem persistente | RNF01, RNF06, RNF07 | Docker/Render configurados; publicação pendente |
+| 15 | US14 | Consultar voos em calendário visual | Alternativa UC01 | Pendente |
+| 16 | US15 | Formalizar revisão e aceite do incremento | Meta do Produto | Pendente |
 
 Os detalhes das divergências do PDF, das políticas adotadas e das funcionalidades complementares ainda ausentes estão em [rastreabilidade e decisões](docs/uml-e-decisoes.md). Não fazem parte deste escopo integrações com companhias reais, pagamentos, SMS ou e-mail.
 
@@ -143,6 +145,7 @@ Os critérios descrevem o comportamento esperado e servem de roteiro para a revi
 | US13 | Como usuário, quero acessar uma instância publicada com dados duráveis. | Serviço responde ao health check; autenticação funciona em HTTPS; reinício/deploy preserva o SQLite; backup e publicação são documentados. |
 | US14 | Como gerente, quero consultar um calendário para visualizar os voos por data. | Navegar por datas; selecionar voo e abrir detalhes; restringir alterações pelo estado e pela empresa. |
 | US15 | Como stakeholder, quero revisar uma demonstração para confirmar o atendimento das necessidades. | Executar o roteiro dos critérios; registrar resultados, feedback e pendências; atualizar o backlog com as decisões. |
+| US16 | Como gerente, quero consultar indicadores e executar as operações da lista SQL para administrar a companhia. | Catálogo 01–40 disponível; filtros e CSV funcionam; valores em reais; acesso exclusivo ao gerente; escopo da empresa aplicado no servidor; escritas validadas, confirmadas e auditadas. |
 
 ## Planejamento das Sprints
 
@@ -212,8 +215,8 @@ A versão atual permite uma demonstração local do fluxo principal, com banco p
 
 | Evidência técnica | Referência |
 |---|---|
-| Dez testes Go de integração | [Testes de aplicação](internal/app/app_test.go) e [testes de domínio](internal/app/domain_test.go) |
-| Fluxos de desktop e celular em navegador real | [Smoke de navegador](scripts/browser-smoke.cjs) |
+| Dezesseis testes Go de integração | [Aplicação](internal/app/app_test.go), [domínio](internal/app/domain_test.go) e [consultas avançadas](internal/app/advanced_test.go) |
+| Fluxos de desktop e celular em navegador real | [Operação principal](scripts/browser-smoke.cjs) e [consultas avançadas](scripts/advanced-smoke.cjs) |
 | Telas do incremento | [Operações](docs/screenshots/operacoes.png), [mestre/detalhe](docs/screenshots/master-detail.png), [bilhetes](docs/screenshots/bilhetes.png), [mobile](docs/screenshots/mobile.png) |
 | Build Windows/Linux, persistência, backup e verificações | [Relatório de validação](docs/validacao.md) |
 | Modelo e regras de UC01–UC08 | [Rastreabilidade UML](docs/uml-e-decisoes.md) |
@@ -232,6 +235,16 @@ As verificações técnicas estão documentadas na entrega original. A documenta
 | Hospedagem e custo do disco | Publicação depende da configuração da conta e do serviço persistente |
 | Dados e segredos locais no Git | Banco, dependências, executáveis e arquivos de ambiente privados excluídos pelo .gitignore |
 | Funcionalidades complementares pendentes | Retorno, duração, calendário e período constam no backlog |
+
+## Consultas avançadas
+
+O gerente dispõe do menu **Consultas avançadas**, com as 40 perguntas e operações SQL fornecidas no enunciado. O catálogo oferece pesquisa por número/assunto, filtros, paginação, exportação CSV e visualização do SQL.
+
+As operações 35–40 usam formulários e as validações do domínio: criação de aeroporto/voo, alteração de tarifa, confirmação e exclusões individuais com prévia. Não há execução de SQL livre enviado pelo navegador. As alterações e exclusões são auditadas; referências de todas as empresas são verificadas antes de excluir um aeroporto.
+
+O banco é migrado automaticamente para registrar a tarifa do voo e sua confirmação comercial. A situação operacional Agendado continua sendo usada pelo relógio do sistema; a consulta apresenta PLANEJADO ou CONFIRMADO conforme o registro de confirmação.
+
+Consulte [o catálogo SQL e as adaptações ao modelo](docs/consultas-avancadas.md), [os relatórios de leitura em SQL](docs/sql/consultas-leitura.sql) e [a tela implementada](docs/screenshots/consultas-avancadas.png).
 
 ## Arquitetura e tecnologias
 
@@ -285,6 +298,7 @@ O [guia técnico](docs/guia-tecnico.md) contém Docker Compose, criação de con
 
 ## Documentação complementar
 
+- [Catálogo das consultas avançadas](docs/consultas-avancadas.md).
 - [Guia técnico de execução e deploy](docs/guia-tecnico.md).
 - [Rastreabilidade UML, decisões e limites](docs/uml-e-decisoes.md).
 - [Resultados e limites da validação técnica](docs/validacao.md).

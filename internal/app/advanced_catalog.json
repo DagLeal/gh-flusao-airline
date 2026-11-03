@@ -1,0 +1,474 @@
+[
+  {
+    "ID": 1,
+    "Title": "Quantidade de registros por tabela",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT 'PAIS' AS TABELA, COUNT(*) AS QUANTIDADE FROM pais\nUNION ALL SELECT 'ESTADO', COUNT(*) FROM estado\nUNION ALL SELECT 'CIDADE', COUNT(*) FROM cidade\nUNION ALL SELECT 'EMPRESA', COUNT(*) FROM empresa WHERE id=:empresa_id\nUNION ALL SELECT 'AEROPORTO', COUNT(*) FROM aeroporto\nUNION ALL SELECT 'AERONAVE', COUNT(*) FROM aeronave WHERE empresa_id=:empresa_id\nUNION ALL SELECT 'VOO', COUNT(*) FROM voos\nUNION ALL SELECT 'ESCALA', COUNT(*) FROM escalas\nUNION ALL SELECT 'PASSAGEIRO', COUNT(*) FROM passageiro\nUNION ALL SELECT 'BILHETE', COUNT(*) FROM bilhete WHERE voo_id IN(SELECT id_voo FROM voos)",
+    "Params": [],
+    "Defaults": {},
+    "Note": "Tabelas de domínio. Voos, frota, escalas vinculadas e bilhetes respeitam a empresa do gerente; cadastros geográficos, aeroportos e passageiros são compartilhados."
+  },
+  {
+    "ID": 2,
+    "Title": "Todos os atributos dos voos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT * FROM voos ORDER BY id_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 3,
+    "Title": "Códigos, empresas e valores dos voos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,valor FROM voos ORDER BY codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 4,
+    "Title": "Voos da empresa Azul",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,situacao,valor FROM voos WHERE empresa=:empresa COLLATE NOCASE ORDER BY codigo_voo",
+    "Params": [
+      "empresa"
+    ],
+    "Defaults": {
+      "empresa": "Azul"
+    },
+    "Note": "Azul é o valor inicial do filtro. Uma empresa diferente da sua sessão não retorna voos."
+  },
+  {
+    "ID": 5,
+    "Title": "Voos acima de R$ 800,00",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,valor FROM voos WHERE valor>:valor ORDER BY valor,codigo_voo",
+    "Params": [
+      "valor"
+    ],
+    "Defaults": {
+      "valor": "800.00"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 6,
+    "Title": "Voos por valor crescente",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,valor FROM voos ORDER BY valor ASC,codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 7,
+    "Title": "Aeroportos do estado de São Paulo",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT nome,sigla,cidade,uf FROM aeroportos WHERE uf=:uf COLLATE NOCASE ORDER BY nome",
+    "Params": [
+      "uf"
+    ],
+    "Defaults": {
+      "uf": "SP"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 8,
+    "Title": "Empresas cadastradas",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT DISTINCT empresa FROM voos ORDER BY empresa",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 9,
+    "Title": "Valor médio dos voos",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT ROUND(AVG(valor),2) AS media_valor FROM voos",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 10,
+    "Title": "Valor médio por empresa",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT empresa,ROUND(AVG(valor),2) AS media_valor FROM voos GROUP BY empresa ORDER BY empresa",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 11,
+    "Title": "Empresas com média acima de R$ 900,00",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT empresa,ROUND(AVG(valor),2) AS media_valor FROM voos GROUP BY empresa HAVING AVG(valor)>:valor ORDER BY empresa",
+    "Params": [
+      "valor"
+    ],
+    "Defaults": {
+      "valor": "900.00"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 12,
+    "Title": "Voos e aeroportos de cada escala",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,e.sequencial,ao.sigla AS origem,ad.sigla AS destino FROM voos v JOIN escalas e ON e.id_voo=v.id_voo JOIN aeroportos ao ON ao.id_aeroporto=e.id_aeroporto_origem JOIN aeroportos ad ON ad.id_aeroporto=e.id_aeroporto_destino ORDER BY v.codigo_voo,e.sequencial",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 13,
+    "Title": "Escalas do voo AD1001",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,e.sequencial,e.tempo_escala FROM voos v JOIN escalas e ON e.id_voo=v.id_voo WHERE v.codigo_voo=:codigo COLLATE NOCASE ORDER BY e.sequencial",
+    "Params": [
+      "codigo"
+    ],
+    "Defaults": {
+      "codigo": "AD1001"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 14,
+    "Title": "Quantidade de escalas por voo",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,COUNT(e.id_escala) AS total_escalas FROM voos v LEFT JOIN escalas e ON e.id_voo=v.id_voo GROUP BY v.id_voo,v.codigo_voo ORDER BY v.codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": "Inclui voos sem escala, com quantidade zero."
+  },
+  {
+    "ID": 15,
+    "Title": "Escalas acima de 45 minutos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,e.sequencial,e.tempo_escala FROM voos v JOIN escalas e ON e.id_voo=v.id_voo WHERE e.tempo_escala>:tempo ORDER BY v.codigo_voo,e.sequencial",
+    "Params": [
+      "tempo"
+    ],
+    "Defaults": {
+      "tempo": "45"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 16,
+    "Title": "Aeroportos de destino das escalas",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT e.id_escala,e.sequencial,a.sigla,a.nome,a.cidade FROM escalas e JOIN aeroportos a ON a.id_aeroporto=e.id_aeroporto_destino ORDER BY e.id_escala",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 17,
+    "Title": "Todos os atributos dos aeroportos",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT * FROM aeroportos ORDER BY id_aeroporto",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 18,
+    "Title": "Código, empresa e valor de todos os voos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,valor FROM voos ORDER BY codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 19,
+    "Title": "Nome, sigla e cidade dos aeroportos de SP",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT nome,sigla,cidade FROM aeroportos WHERE uf=:uf COLLATE NOCASE ORDER BY nome",
+    "Params": [
+      "uf"
+    ],
+    "Defaults": {
+      "uf": "SP"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 20,
+    "Title": "Escalas acima de 120 minutos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT id_voo,sequencial,tempo_escala FROM escalas WHERE tempo_escala>:tempo ORDER BY id_voo,sequencial",
+    "Params": [
+      "tempo"
+    ],
+    "Defaults": {
+      "tempo": "120"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 21,
+    "Title": "Códigos dos voos confirmados",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo FROM voos WHERE situacao='CONFIRMADO' ORDER BY codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 22,
+    "Title": "Voos do mais caro para o mais barato",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,valor FROM voos ORDER BY valor DESC,codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 23,
+    "Title": "Voos de menor e maior valor",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT empresa,codigo_voo,valor FROM voos WHERE valor=(SELECT MIN(valor) FROM voos) OR valor=(SELECT MAX(valor) FROM voos) ORDER BY valor,codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": "Inclui todos os empates nos valores mínimo e máximo."
+  },
+  {
+    "ID": 24,
+    "Title": "Escalas que partem do Rio de Janeiro",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT e.sequencial,a.sigla AS sigla_origem,a.cidade,a.uf FROM escalas e JOIN aeroportos a ON a.id_aeroporto=e.id_aeroporto_origem WHERE a.uf=:uf COLLATE NOCASE ORDER BY e.id_voo,e.sequencial",
+    "Params": [
+      "uf"
+    ],
+    "Defaults": {
+      "uf": "RJ"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 25,
+    "Title": "Escalas com destino a Recife",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT e.sequencial,a.sigla AS sigla_destino,a.nome,a.cidade FROM escalas e JOIN aeroportos a ON a.id_aeroporto=e.id_aeroporto_destino WHERE a.cidade=:cidade COLLATE NOCASE ORDER BY e.id_voo,e.sequencial",
+    "Params": [
+      "cidade"
+    ],
+    "Defaults": {
+      "cidade": "Recife"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 26,
+    "Title": "Origem e destino de cada escala",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT e.id_escala,e.sequencial,ao.sigla AS origem,ao.cidade AS cidade_origem,ad.sigla AS destino,ad.cidade AS cidade_destino FROM escalas e JOIN aeroportos ao ON ao.id_aeroporto=e.id_aeroporto_origem JOIN aeroportos ad ON ad.id_aeroporto=e.id_aeroporto_destino ORDER BY e.id_escala",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 27,
+    "Title": "Código, empresa e aeroportos de cada trecho",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,e.sequencial,ao.sigla AS origem,ad.sigla AS destino FROM voos v JOIN escalas e ON e.id_voo=v.id_voo JOIN aeroportos ao ON ao.id_aeroporto=e.id_aeroporto_origem JOIN aeroportos ad ON ad.id_aeroporto=e.id_aeroporto_destino ORDER BY v.codigo_voo,e.sequencial",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 28,
+    "Title": "Voos que passam por aeroportos de São Paulo",
+    "Group": "Aeroportos e rotas",
+    "Kind": "read",
+    "SQL": "SELECT DISTINCT v.codigo_voo,v.empresa,v.valor FROM voos v JOIN escalas e ON e.id_voo=v.id_voo JOIN aeroportos ao ON ao.id_aeroporto=e.id_aeroporto_origem JOIN aeroportos ad ON ad.id_aeroporto=e.id_aeroporto_destino WHERE ao.uf=:uf COLLATE NOCASE OR ad.uf=:uf COLLATE NOCASE ORDER BY v.codigo_voo",
+    "Params": [
+      "uf"
+    ],
+    "Defaults": {
+      "uf": "SP"
+    },
+    "Note": "Cada voo aparece uma vez, mesmo quando vários trechos passam por SP."
+  },
+  {
+    "ID": 29,
+    "Title": "Quantidade de trechos por voo e empresa",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,COUNT(e.id_escala) AS total_trechos FROM voos v LEFT JOIN escalas e ON e.id_voo=v.id_voo GROUP BY v.id_voo,v.codigo_voo,v.empresa ORDER BY v.codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 30,
+    "Title": "Voos com três ou mais trechos",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,COUNT(e.id_escala) AS total_trechos FROM voos v JOIN escalas e ON e.id_voo=v.id_voo GROUP BY v.id_voo,v.codigo_voo,v.empresa HAVING COUNT(e.id_escala)>=:trechos ORDER BY v.codigo_voo",
+    "Params": [
+      "trechos"
+    ],
+    "Defaults": {
+      "trechos": "3"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 31,
+    "Title": "Tempo médio e quantidade de escalas por voo",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT v.codigo_voo,v.empresa,ROUND(AVG(e.tempo_escala),2) AS tempo_medio,COUNT(e.id_escala) AS total_trechos FROM voos v LEFT JOIN escalas e ON e.id_voo=v.id_voo GROUP BY v.id_voo,v.codigo_voo,v.empresa ORDER BY v.codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 32,
+    "Title": "Voos acima da média de valor",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,valor FROM voos WHERE valor>(SELECT AVG(valor) FROM voos) ORDER BY valor,codigo_voo",
+    "Params": [],
+    "Defaults": {},
+    "Note": ""
+  },
+  {
+    "ID": 33,
+    "Title": "Aeroportos com mais de uma chegada",
+    "Group": "Indicadores",
+    "Kind": "read",
+    "SQL": "SELECT a.sigla,a.nome,a.cidade,COUNT(e.id_escala) AS total_chegadas FROM aeroportos a JOIN escalas e ON e.id_aeroporto_destino=a.id_aeroporto GROUP BY a.id_aeroporto,a.sigla,a.nome,a.cidade HAVING COUNT(e.id_escala)>:chegadas ORDER BY total_chegadas DESC,a.sigla",
+    "Params": [
+      "chegadas"
+    ],
+    "Defaults": {
+      "chegadas": "1"
+    },
+    "Note": ""
+  },
+  {
+    "ID": 34,
+    "Title": "Visão V1: voos e seus trechos",
+    "Group": "Voos e escalas",
+    "Kind": "read",
+    "SQL": "SELECT codigo_voo,empresa,situacao,valor,sequencial,origem,destino,tempo_escala FROM V1 WHERE empresa_id=:empresa_id ORDER BY codigo_voo,sequencial",
+    "Params": [],
+    "Defaults": {},
+    "Note": "A visão V1 é criada pela migração de banco. A consulta aplica a empresa do gerente."
+  },
+  {
+    "ID": 35,
+    "Title": "Inserir aeroporto Santos Dumont",
+    "Group": "Operações",
+    "Kind": "write",
+    "SQL": "INSERT INTO aeroporto(nome,sigla,cidade_id) VALUES(:nome,:sigla,:cidade_id)",
+    "Params": [
+      "sigla"
+    ],
+    "Defaults": {
+      "sigla": "SDU"
+    },
+    "Note": "A cidade é selecionada no cadastro geográfico; a UF é obtida pelo estado. O aeroporto inicia como Cadastrado."
+  },
+  {
+    "ID": 36,
+    "Title": "Inserir voo G31111",
+    "Group": "Operações",
+    "Kind": "write",
+    "SQL": "INSERT INTO voo(codigo_voo,empresa_id,aeronave_id,origem_id,destino_id,partida,chegada,valor_centavos) VALUES(:codigo,:empresa_id,:aeronave_id,:origem_id,:destino_id,:partida,:chegada,:valor_centavos)",
+    "Params": [
+      "codigo"
+    ],
+    "Defaults": {
+      "codigo": "G31111"
+    },
+    "Note": "O enunciado alterna G3111 e G31111. Usamos G31111 como sugestão, conforme as operações seguintes. A empresa é a da sua sessão; aeronave, rota e horários são obrigatórios."
+  },
+  {
+    "ID": 37,
+    "Title": "Alterar o valor do voo G31111",
+    "Group": "Operações",
+    "Kind": "write",
+    "SQL": "UPDATE voo SET valor_centavos=:valor_centavos,versao=versao+1 WHERE id=:registro_id AND empresa_id=:empresa_id AND situacao='Agendado' AND versao=:versao",
+    "Params": [
+      "codigo"
+    ],
+    "Defaults": {
+      "codigo": "G31111"
+    },
+    "Note": "Alteração somente em voo agendado, com controle de versão."
+  },
+  {
+    "ID": 38,
+    "Title": "Confirmar o voo G31111",
+    "Group": "Operações",
+    "Kind": "write",
+    "SQL": "UPDATE voo SET confirmado=1,versao=versao+1 WHERE id=:registro_id AND empresa_id=:empresa_id AND situacao='Agendado' AND confirmado=0 AND versao=:versao",
+    "Params": [
+      "codigo"
+    ],
+    "Defaults": {
+      "codigo": "G31111"
+    },
+    "Note": "Confirmação comercial independente do estado operacional: o voo continua Agendado até a partida."
+  },
+  {
+    "ID": 39,
+    "Title": "Excluir a primeira escala do voo G31111",
+    "Group": "Operações",
+    "Kind": "write",
+    "SQL": "DELETE FROM escala WHERE id=:registro_id AND voo_id IN(SELECT id FROM voo WHERE empresa_id=:empresa_id AND situacao='Agendado') AND sequencial=1 AND versao=:versao",
+    "Params": [
+      "codigo"
+    ],
+    "Defaults": {
+      "codigo": "G31111"
+    },
+    "Note": "Exclusão física da escala de sequencial 1, antes da partida, sem bilhetes ativos e mantendo ao menos outro trecho ativo. A operação é auditada."
+  },
+  {
+    "ID": 40,
+    "Title": "Aeroportos sem escalas",
+    "Group": "Operações",
+    "Kind": "cleanup",
+    "SQL": "SELECT a.* FROM aeroportos a WHERE NOT EXISTS(SELECT 1 FROM escala e WHERE e.origem_id=a.id_aeroporto OR e.destino_id=a.id_aeroporto) ORDER BY a.id_aeroporto",
+    "Params": [],
+    "Defaults": {},
+    "Note": "A lista considera todas as escalas, inclusive de outras empresas. A exclusão é individual, com confirmação, e exige ausência de referências em escalas, voos e bilhetes."
+  }
+]

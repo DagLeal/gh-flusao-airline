@@ -10,6 +10,7 @@
  document.addEventListener('htmx:beforeRequest',e=>{if(e.detail.requestConfig.verb==='get'&&dirty()&&e.detail.target?.id!=='modal'){if(!confirm('Existem alterações não salvas. Deseja descartá-las?'))e.preventDefault();}});
  document.addEventListener('htmx:responseError',e=>{toast(e.detail.xhr.responseText||'Não foi possível concluir a operação. Tente novamente.');});
  document.addEventListener('htmx:sendError',()=>toast('Não foi possível conectar ao servidor. Seus campos foram mantidos.'));
+ document.addEventListener('input',e=>{if(e.target.matches('[data-report-search]')){const q=e.target.value.toLocaleLowerCase('pt-BR');document.querySelectorAll('[data-report-item]').forEach(item=>{item.hidden=!item.textContent.toLocaleLowerCase('pt-BR').includes(q);});}});
  document.addEventListener('input',e=>{const cell=e.target.closest('.cell-input');if(!cell)return;const row=cell.closest('[data-row-id]');row.dataset.dirty='true';row.querySelector('[data-changed]').disabled=false;updateCount(row.closest('[data-grid]'));});
  document.addEventListener('change',e=>{if(e.target.matches('[data-inline-toggle]')){const f=e.target.closest('form'),active=e.target.checked;f.querySelector('[data-inline-fields]').hidden=!active;const select=f.querySelector('[name=passageiro_id]');select.required=!active;select.disabled=active;f.querySelectorAll('[name=new_nome],[name=new_documento]').forEach(el=>el.required=active);}});
  document.addEventListener('click',e=>{const button=e.target.closest('[data-seat]');if(button){const f=button.closest('form');f.querySelector('[name=assento]').value=button.dataset.seat;f.querySelectorAll('[data-seat]').forEach(el=>el.classList.remove('chosen'));button.classList.add('chosen');}});
@@ -34,5 +35,5 @@
  document.addEventListener('gridSaved',e=>{const form=e.target.closest?.('.batch-form')||e.target;const grid=form.closest?.('[data-grid]');if(grid){grid.querySelectorAll('[data-dirty]').forEach(r=>delete r.dataset.dirty);htmx.trigger(grid,'refreshGrid');}toast('Alterações da grade salvas com sucesso.');});
  document.addEventListener('stateChanged',()=>{toast('Estado atualizado. Os registros relacionados também foram processados.');document.querySelectorAll('[data-grid]').forEach(g=>{if(!g.closest('#detail'))htmx.trigger(g,'refreshGrid');});});
  window.addEventListener('beforeunload',e=>{if(dirty()){e.preventDefault();e.returnValue='';}});
- const entity=new URLSearchParams(location.search).get('entity')||'voo';document.querySelectorAll('.sidebar nav a').forEach(a=>{if(new URL(a.href).searchParams.get('entity')===entity)a.classList.add('active');});
+ const entity=new URLSearchParams(location.search).get('entity')||'voo';document.querySelectorAll('.sidebar nav a').forEach(a=>{if((location.pathname==='/consultas-avancadas'&&new URL(a.href).pathname==='/consultas-avancadas')||(location.pathname!=='/consultas-avancadas'&&new URL(a.href).searchParams.get('entity')===entity))a.classList.add('active');});
 })();

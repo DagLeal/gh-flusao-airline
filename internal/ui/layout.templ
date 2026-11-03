@@ -31,6 +31,7 @@ templ Layout(name string, role string, csrf string, content templ.Component) {
  <a href="/?entity=bilhete">▤ <span>Meus bilhetes</span></a>
  }
  if role == "gerente" {
+ <a href="/consultas-avancadas">⌕ <span>Consultas avançadas</span></a>
  <p class="nav-label">CADASTROS</p>
  <a href="/?entity=aeronave">✈ <span>Frota</span></a>
  <a href="/?entity=aeroporto">⌖ <span>Aeroportos</span></a>

@@ -39,7 +39,7 @@ O relógio executa a cada 15 segundos e antes de consultas/mutações: Agendado 
 1. **Aeronaves e aeroportos com histórico:** os fluxos alternativos permitem excluir mantendo histórico, enquanto algumas exceções proíbem. A implementação preserva as linhas e referências por exclusão lógica, bloqueando voos/escalas ativos.
 2. **Voo com pelo menos uma escala versus escala sem voo:** cada voo novo recebe um trecho inicial programado, na mesma transação. Escalas independentes podem ser planejadas e depois associadas. A tarifa inicial é zero e o tempo inicial é a duração estimada; para uma rota comercial, cadastre os trechos tarifados conforme a operação.
 3. **Cancelamento de escala e bilhetes:** o modelo associa bilhete ao voo, sem bilhete_escala. Por isso, cancelar uma escala programada cancela os bilhetes ainda não embarcados do voo, com motivo registrado; não é possível identificar um subconjunto por trecho.
-4. **Exclusão:** nunca apaga histórico operacional. País, estado, cidade e empresa só podem alcançar exclusão sem referências dependentes; passageiro exige ausência de qualquer bilhete histórico.
+4. **Exclusão:** o CRUD principal preserva o histórico por exclusão lógica. País, estado, cidade e empresa só podem alcançar exclusão sem referências dependentes; passageiro exige ausência de qualquer bilhete histórico.
 5. **Aeronave em manutenção:** o PDF cita “N dias” sem definir configuração. A política adotada bloqueia manutenção ou retirada enquanto houver qualquer voo agendado ou em progresso, independentemente de quantos dias faltam.
 6. **Check-in e embarque:** check-in termina na partida; embarque por atendente inicia duas horas antes, podendo ser confirmado com voo em andamento conforme a narrativa. Passageiro não confirma embarque.
 7. **Geografia:** país e estado começam em Cadastrado, cidade em Cadastrada; a criação do primeiro dependente ativa o pai, conforme os diagramas. Não há reativação após a inativação terminal.
@@ -74,3 +74,16 @@ O arquivo de queries usa apenas ASCII: os rótulos “Concluído/Concluída” s
 Senhas bcrypt; cookies HttpOnly e SameSite Strict, Secure em HTTPS; sessões de oito horas armazenadas pelo hash do token; proteção CSRF em POST, inclusive no login; CSP sem JavaScript inline; limite de tamanho de requisição; limite de tentativas de login por IP; isolamento de dados e controle de versão de registros. O endpoint `/healthz` verifica a conexão do banco sem expor os dados.
 
 Os dados compartilhados de geografia e aeroportos são globais, enquanto aeronaves e voos têm vínculo de empresa. Escalas planejadas sem voo são compartilhadas entre gerentes; ganham escopo de empresa após associação. A aplicação pressupõe uma equipe confiável para administrar os cadastros compartilhados.
+
+
+## Ampliação: consultas avançadas
+
+O catálogo de 40 itens está documentado em [Consultas avançadas](consultas-avancadas.md). As consultas de voos e seus indicadores respeitam a empresa da sessão; geografia, aeroportos e passageiros seguem o escopo compartilhado já existente.
+
+O voo passa a possuir tarifa própria em centavos e um indicador de confirmação comercial. Na migração de um banco anterior, a tarifa é inicializada uma única vez pela soma das escalas não canceladas, com incremento de versão para invalidar formulários antigos. Novos voos têm tarifa própria, independente de ajustes posteriores nos valores dos trechos.
+
+PLANEJADO representa Agendado sem confirmação; CONFIRMADO representa Agendado com confirmação. Quando o estado operacional muda, a consulta mostra o novo estado. Confirmar não antecipa decolagem nem conclusão.
+
+As operações SQL 39 e 40 permitem exclusão física excepcional, em vez da exclusão lógica do CRUD. A primeira escala só pode ser removida antes da partida, sem bilhetes não cancelados e mantendo outro trecho ativo; a origem/destino do voo são sincronizados com a rota restante. Aeroportos exigem ausência de referências em todas as companhias e ausência de histórico de manutenção. O registro anterior é mantido na auditoria. IDs de aeroportos e escalas removidos não são reutilizados pelas operações da aplicação.
+
+O catálogo é fixo e parametrizado. Nenhum texto SQL recebido do cliente é executado. O gerente não pode alterar a empresa usada para autorizar uma consulta ou mutação.

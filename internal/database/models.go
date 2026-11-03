@@ -143,14 +143,16 @@ type Usuario struct {
 }
 
 type Voo struct {
-	ID         int64  `json:"id"`
-	CodigoVoo  string `json:"codigo_voo"`
-	EmpresaID  int64  `json:"empresa_id"`
-	AeronaveID int64  `json:"aeronave_id"`
-	OrigemID   int64  `json:"origem_id"`
-	DestinoID  int64  `json:"destino_id"`
-	Partida    string `json:"partida"`
-	Chegada    string `json:"chegada"`
-	Situacao   string `json:"situacao"`
-	Versao     int64  `json:"versao"`
+	ID            int64  `json:"id"`
+	CodigoVoo     string `json:"codigo_voo"`
+	EmpresaID     int64  `json:"empresa_id"`
+	AeronaveID    int64  `json:"aeronave_id"`
+	OrigemID      int64  `json:"origem_id"`
+	DestinoID     int64  `json:"destino_id"`
+	Partida       string `json:"partida"`
+	Chegada       string `json:"chegada"`
+	Situacao      string `json:"situacao"`
+	ValorCentavos int64  `json:"valor_centavos"`
+	Confirmado    int64  `json:"confirmado"`
+	Versao        int64  `json:"versao"`
 }

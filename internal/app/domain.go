@@ -114,6 +114,9 @@ func (a *App) save(ctx context.Context, tx *sql.Tx, u User, k string, id int64, 
 		}
 		v["passageiro_id"] = strconv.FormatInt(passengerID, 10)
 	}
+	if k == "voo" && strings.TrimSpace(v["valor_centavos"]) == "" {
+		v["valor_centavos"] = "0"
+	}
 	data := Row{}
 	for _, f := range en.Fields {
 		s := strings.TrimSpace(v[f.Key])
@@ -287,6 +290,13 @@ func (a *App) save(ctx context.Context, tx *sql.Tx, u User, k string, id int64, 
 			data["situacao"] = en.Initial
 		}
 	}
+	if id == 0 && (k == "escala" || k == "aeroporto") {
+		next, e := nextAuditedID(ctx, tx, k)
+		if e != nil {
+			return 0, e
+		}
+		data["id"] = strconv.FormatInt(next, 10)
+	}
 	keys, vals, params := []string{}, []interface{}{}, []string{}
 	// Column names originate only from the immutable server-side metadata and the explicit derived fields above.
 	for key, value := range data {
@@ -332,7 +342,11 @@ func (a *App) save(ctx context.Context, tx *sql.Tx, u User, k string, id int64, 
 	if k == "voo" && old["id"] == "" {
 		start, _ := time.Parse(time.RFC3339, data["partida"])
 		end, _ := time.Parse(time.RFC3339, data["chegada"])
-		if _, e := tx.ExecContext(ctx, "INSERT INTO escala(voo_id,sequencial,origem_id,destino_id,tempo_escala,valor_centavos,situacao) VALUES(?,1,?,?,?,0,'Programada')", id, data["origem_id"], data["destino_id"], int(end.Sub(start).Minutes())); e != nil {
+		scaleID, e := nextAuditedID(ctx, tx, "escala")
+		if e != nil {
+			return 0, e
+		}
+		if _, e := tx.ExecContext(ctx, "INSERT INTO escala(id,voo_id,sequencial,origem_id,destino_id,tempo_escala,valor_centavos,situacao) VALUES(?,?,1,?,?,?,0,'Programada')", scaleID, id, data["origem_id"], data["destino_id"], int(end.Sub(start).Minutes())); e != nil {
 			return 0, e
 		}
 	}

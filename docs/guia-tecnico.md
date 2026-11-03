@@ -42,7 +42,7 @@ O pacote Windows também contém `bin/aeroporto.exe`; execute `Iniciar-Demo.ps1`
 
 **Grade interativa:** “Editar grade” libera as células permitidas pelo estado; Tab navega entre campos. “Salvar alterações” grava todas as linhas modificadas em uma transação. Qualquer erro reverte o conjunto. Há aviso de alterações pendentes, descarte, filtros, ordenação, paginação e CSV da página atual. A criação de registros usa formulário modal. Esta é uma implementação própria do padrão, sem dependência do Oracle APEX.
 
-**Histórico:** exclusões são lógicas; registros excluídos ficam fora da listagem padrão e podem ser consultados pelo filtro de situação. As transições manuais registram usuário, motivo e horário. Manutenções têm histórico próprio.
+**Histórico no CRUD principal:** exclusões são lógicas; registros excluídos ficam fora da listagem padrão e podem ser consultados pelo filtro de situação. As transições manuais registram usuário, motivo e horário. Manutenções têm histórico próprio.
 
 ## Produção no Render
 
@@ -165,3 +165,20 @@ render.yaml                Deploy com disco persistente
 ```
 
 Consulte [as decisões e a cobertura do PDF](uml-e-decisoes.md) e [as verificações realizadas](validacao.md).
+
+
+## Consultas avançadas e migração do banco
+
+O menu de gerente inclui [40 consultas e operações](consultas-avancadas.md). Execute os relatórios sem alterar o banco; as ações de cadastro e alteração usam formulários separados.
+
+No primeiro início após esta atualização, a migração adiciona tarifa e confirmação ao voo, inicializa a tarifa de bancos anteriores e cria a visão V1. Ela preserva as linhas existentes e não recalcula tarifas nos reinícios seguintes. Para manutenção, produza um backup com a versão anterior antes da atualização.
+
+O acesso é restrito ao gerente. Cadastro de voos continua exigindo aeronave, aeroportos, horários e empresa ativa. Os exemplos Azul, AD1001 e G31111 são valores iniciais de filtros, não dados fictícios adicionados ao banco do usuário.
+
+Novo smoke de navegador, em uma demonstração com banco novo e porta 8187:
+
+```powershell
+npm run test:advanced
+```
+
+O teste executa as operações assistidas sobre dados de teste e verifica filtros, escopo, CSV, confirmação, exclusões, navegação HTMX e layout mobile. Use uma base nova separada daquela utilizada pelo smoke principal.

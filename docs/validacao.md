@@ -6,7 +6,7 @@ Ambiente: Windows amd64, Go 1.27.3, Node 22+, Chrome instalado. Builds finais pa
 
 | Verificação | Resultado |
 |---|---|
-| go test ./... -count=1 | 10 testes de integração aprovados |
+| go test ./... -count=1 | 16 testes de integração aprovados |
 | go vet ./... | Sem problemas |
 | Build Windows com -trimpath -ldflags="-s -w" | Aprovado; executável de aproximadamente 15 MB |
 | Build Linux amd64, CGO_ENABLED=0 | Aprovado; executável de aproximadamente 15 MB |
@@ -47,3 +47,21 @@ Capturas: [login](screenshots/login.png), [operações](screenshots/operacoes.pn
 O Docker CLI está instalado, mas o daemon Docker Desktop não estava em execução. Portanto, a imagem Docker não foi construída nem executada nesta máquina. O servidor foi compilado para Linux sem CGO, e os scripts de entrypoint foram normalizados para LF.
 
 Não houve publicação em conta Render, acesso a domínio externo nem teste de carga com múltiplos usuários reais. O blueprint, Dockerfile, disco persistente e variáveis estão preparados para o deploy pelo proprietário.
+
+
+## Atualização: consultas avançadas
+
+Seis testes de integração adicionais aprovados:
+
+11. Execução das 40 prévias/consultas, unicidade dos IDs e isolamento por companhia.
+12. Filtros monetários, confirmação, empates de valores, voos sem escalas e paginação.
+13. Bloqueio de outros perfis, parâmetros inválidos, tentativa de SQL livre, CSV e URL de navegação.
+14. Cadastro de aeroporto/voo, mudança de tarifa, confirmação, exclusão protegida, sincronização da rota, auditoria e não reutilização de IDs.
+15. Bloqueio de alteração de voo alheio e verificação global de referências de aeroporto.
+16. Migração de banco antigo, tarifa inicial, visão V1, preservação dos dados e idempotência.
+
+O smoke específico de consultas avançadas passou em Chrome: catálogo 1–40, filtros, navegação HTMX com recarga da página, CSV, cadastros, alteração de tarifa, confirmação, bloqueio de exclusão do último trecho, exclusão após inclusão de outro trecho, remoção de aeroporto sem referências, SQL visível, acesso exclusivo ao gerente e mobile sem transbordamento horizontal.
+
+O smoke original também foi reexecutado em outro banco novo e passou, preservando os fluxos de mestre/detalhe, grade, emissão inline, check-in e isolamento de passageiros.
+
+Capturas: [consultas](screenshots/consultas-avancadas.png), [visão V1](screenshots/consultas-avancadas-v1.png), [mobile](screenshots/consultas-avancadas-mobile.png).

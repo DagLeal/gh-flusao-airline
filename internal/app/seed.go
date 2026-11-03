@@ -103,7 +103,7 @@ func (a *App) SeedDemo(ctx context.Context) error {
 		start := time.Date(base.Year(), base.Month(), base.Day()+i/3, 8+(i%3)*4, 0, 0, 0, a.Location).UTC()
 		dest := 2 + i%3
 		craft := 1 + i%2
-		res, e := tx.ExecContext(ctx, "INSERT INTO voo(codigo_voo,empresa_id,aeronave_id,origem_id,destino_id,partida,chegada) VALUES(?,1,?,1,?,?,?)", fmt.Sprintf("ER %04d", 2101+i), craft, dest, start.Format(time.RFC3339), start.Add(2*time.Hour).Format(time.RFC3339))
+		res, e := tx.ExecContext(ctx, "INSERT INTO voo(codigo_voo,empresa_id,aeronave_id,origem_id,destino_id,partida,chegada,valor_centavos) VALUES(?,1,?,1,?,?,?,45990)", fmt.Sprintf("ER %04d", 2101+i), craft, dest, start.Format(time.RFC3339), start.Add(2*time.Hour).Format(time.RFC3339))
 		if e != nil {
 			return e
 		}

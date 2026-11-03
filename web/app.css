@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./advanced.css";
 @source "../internal/app/templates";
 @source "../internal/ui";
 @theme { --color-brand: #155eef; --font-sans: "Segoe UI", Arial, sans-serif; }

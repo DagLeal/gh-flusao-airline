@@ -65,6 +65,10 @@ func New(path string) (*App, error) {
 			return nil, err
 		}
 	}
+	if err = migrateAdvanced(db); err != nil {
+		db.Close()
+		return nil, err
+	}
 	loc, err := time.LoadLocation(env("APP_TIMEZONE", "America/Sao_Paulo"))
 	if err != nil {
 		return nil, err
@@ -166,6 +170,10 @@ func (a *App) Routes() http.Handler {
 		r.Use(a.authenticate)
 		r.Use(a.csrf)
 		r.Get("/", a.home)
+		r.Get("/consultas-avancadas", a.advancedPage)
+		r.Get("/consultas-avancadas/resultado", a.advancedResult)
+		r.Get("/consultas-avancadas/csv", a.advancedCSV)
+		r.Post("/consultas-avancadas/operacao", a.advancedOperation)
 		r.Post("/logout", a.logout)
 		r.Get("/grid/{entity}", a.gridHandler)
 		r.Get("/seats", a.seatsHandler)

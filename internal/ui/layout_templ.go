@@ -56,7 +56,7 @@ func Layout(name string, role string, csrf string, content templ.Component) temp
 			}
 		}
 		if role == "gerente" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"nav-label\">CADASTROS</p><a href=\"/?entity=aeronave\">✈ <span>Frota</span></a> <a href=\"/?entity=aeroporto\">⌖ <span>Aeroportos</span></a> <a href=\"/?entity=empresa\">▦ <span>Empresas</span></a> <a href=\"/?entity=pais\">◎ <span>Países</span></a> <a href=\"/?entity=estado\">◫ <span>Estados</span></a> <a href=\"/?entity=cidade\">⌂ <span>Cidades</span></a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<a href=\"/consultas-avancadas\">⌕ <span>Consultas avançadas</span></a><p class=\"nav-label\">CADASTROS</p><a href=\"/?entity=aeronave\">✈ <span>Frota</span></a> <a href=\"/?entity=aeroporto\">⌖ <span>Aeroportos</span></a> <a href=\"/?entity=empresa\">▦ <span>Empresas</span></a> <a href=\"/?entity=pais\">◎ <span>Países</span></a> <a href=\"/?entity=estado\">◫ <span>Estados</span></a> <a href=\"/?entity=cidade\">⌂ <span>Cidades</span></a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -68,7 +68,7 @@ func Layout(name string, role string, csrf string, content templ.Component) temp
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(role)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 43, Col: 96}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 44, Col: 96}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -81,7 +81,7 @@ func Layout(name string, role string, csrf string, content templ.Component) temp
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 46, Col: 148}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 47, Col: 148}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -94,7 +94,7 @@ func Layout(name string, role string, csrf string, content templ.Component) temp
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templruntime.NewAttributeExpression(csrf).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 46, Col: 232}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/ui/layout.templ`, Line: 47, Col: 232}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
