@@ -11,7 +11,7 @@ Este arquivo é um modelo para uso pela equipe. Nenhum evento, decisão de aceit
 | Início e término | A preencher |
 | Product Owner | A preencher |
 | Scrum Master | A preencher |
-| Developers | A preencher |
+| Developers | Daniel Oliveira, Pedro Artur e Dagner Costa |
 | Stakeholders consultados | A preencher |
 | Meta da Sprint | A preencher com o resultado pretendido |
 | Data da Sprint Planning | A preencher |

@@ -53,15 +53,23 @@ Os perfis abaixo representam usuários do produto, e não responsabilidades Scru
 | Docente / avaliador | Conferir aderência ao enunciado, UML, execução e documentação |
 | Responsável pelo projeto | Validar prioridades e acompanhar a evolução da entrega |
 
+### Equipe e frentes de trabalho
+
+| Frente | Responsáveis | Atuação |
+|---|---|---|
+| Infraestrutura | Dagner Costa | Configuração dos ambientes, Docker e Render, persistência do SQLite, backup e deploy |
+| Desenvolvimento | Daniel Oliveira, Pedro Artur e Dagner Costa | Implementação do backend e frontend, regras de negócio, integração e testes |
+| Modelagens UML em geral | Dagner Costa e Daniel Oliveira | Elaboração e manutenção dos modelos e diagramas UML, incluindo classes, casos de uso, estados e sequência |
+
 ### Responsabilidades Scrum
 
 | Responsabilidade | Aplicação no projeto | Integrante |
 |---|---|---|
 | Product Owner | Ordenar o backlog, esclarecer o objetivo do produto e alinhar necessidades com stakeholders | A definir pela equipe |
 | Scrum Master | Apoiar o uso de Scrum, facilitar os eventos e ajudar a remover impedimentos | A definir pela equipe |
-| Developers | Planejar e executar o trabalho, testar, documentar e entregar incrementos utilizáveis | A definir pela equipe |
+| Developers | Planejar e executar o trabalho, testar, documentar e entregar incrementos utilizáveis | Daniel Oliveira, Pedro Artur e Dagner Costa |
 
-Os nomes não foram fornecidos. A atribuição de responsabilidades deve ser preenchida pela equipe; o proprietário do repositório não é presumido como Product Owner.
+A equipe técnica está identificada nas frentes acima. As designações de Product Owner e Scrum Master permanecem a definir pela equipe.
 
 ## Escopo e requisitos
 
@@ -218,7 +226,7 @@ As verificações técnicas estão documentadas na entrega original. A documenta
 | Risco / dependência | Situação e tratamento |
 |---|---|
 | Divergências entre diagramas e descrições do PDF | Decisões registradas em [UML e decisões](docs/uml-e-decisoes.md); confirmar com stakeholders |
-| Equipe e datas ainda não formalizadas | Responsabilidades e agenda permanecem a definir |
+| Responsabilidades Scrum e agenda | Equipe técnica definida; Product Owner, Scrum Master e datas das Sprints permanecem a definir |
 | SQLite em ambiente efêmero | Usar Render com disco persistente; Vercel exigiria mudança de persistência |
 | Validação do contêiner | Dockerfile preparado, mas a imagem ainda não foi executada nesta entrega |
 | Hospedagem e custo do disco | Publicação depende da configuração da conta e do serviço persistente |
