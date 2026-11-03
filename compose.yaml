@@ -1,0 +1,13 @@
+services:
+  aeroporto:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_PATH: /data/aeroporto.db
+      COOKIE_SECURE: "false"
+      DEMO_MODE: "true"
+    volumes:
+      - aeroporto-data:/data
+volumes:
+  aeroporto-data:

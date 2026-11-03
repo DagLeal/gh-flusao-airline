@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: erlaine-aeroporto
+    runtime: docker
+    plan: starter
+    healthCheckPath: /healthz
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /data/aeroporto.db
+      - key: APP_TIMEZONE
+        value: America/Sao_Paulo
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: DEMO_MODE
+        value: "false"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: COMPANY_NAME
+        sync: false
+      - key: COMPANY_CNPJ
+        sync: false
