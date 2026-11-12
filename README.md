@@ -66,8 +66,8 @@ Os perfis abaixo representam usuários do produto, e não responsabilidades Scru
 
 | Responsabilidade | Aplicação no projeto | Integrante |
 |---|---|---|
-| Product Owner | Ordenar o backlog, esclarecer o objetivo do produto e alinhar necessidades com stakeholders | A definir pela equipe |
-| Scrum Master | Apoiar o uso de Scrum, facilitar os eventos e ajudar a remover impedimentos | A definir pela equipe |
+| Product Owner | Ordenar o backlog, esclarecer o objetivo do produto e alinhar necessidades com stakeholders | George Hamilton Andrade Costa |
+| Scrum Master | Apoiar o uso de Scrum, facilitar os eventos e ajudar a remover impedimentos | Daniel Oliveira |
 | Developers | Planejar e executar o trabalho, testar, documentar e entregar incrementos utilizáveis | Daniel Oliveira, Pedro Artur e Dagner Costa |
 
 A equipe técnica está identificada nas frentes acima. As designações de Product Owner e Scrum Master permanecem a definir pela equipe.
